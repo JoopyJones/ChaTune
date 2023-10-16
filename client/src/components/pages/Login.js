@@ -8,11 +8,11 @@ export default function Login({socket}){
     //this function will send the users info over to the server and then enter the chat room
     function handleLoginSubmit(e){
         e.preventDefault();
-        console.log(`Username is: ${userName}`);
 
         socket.emit('logon', {
             name: userName
-          })
+          });
+        
         navigate('/chat');
     }
 
@@ -20,12 +20,14 @@ export default function Login({socket}){
         <div className="login-header">
             <div className="login-box">
                 <form>
-                    <input  type="text" 
-                            required 
+                    <input  
+                            autoFocus
+                            minLength="1"
                             name="user_name"
-                            value={userName}
                             onChange={(e)=>setUserName(e.target.value)}
-                            placeholder="Enter Your Username">
+                            placeholder="Enter Your Username"
+                            required 
+                            value={userName}>
 
                     </input>
                     <button type="submit" onClick={handleLoginSubmit}>Enter</button>

@@ -11,10 +11,12 @@ import RootLayout from './components/layouts/RootLayout';
 import Login from './components/pages/Login';
 import Chat from './components/pages/Chat';
 
+//socket
 import io from 'socket.io-client';
-const socket = io.connect('http://localhost:4000');
 
 function App() {
+  const socket = io.connect('http://localhost:4000');
+
 
   const router = createBrowserRouter(
     createRoutesFromElements(

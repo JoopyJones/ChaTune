@@ -1,3 +1,8 @@
 .App {
   text-align: center;
 }
+
+.chat-header .chat-messages pre{
+  text-align: left;
+  margin: auto;
+}

@@ -17,28 +17,65 @@ const socketListener = new Server(server, {
   },
 });
 
-var allUsers ={
-    names: []
-};
+//stores all connected users by (socket.id, name)
+var connectedUsers = new Map();
+
+const defaultRoom = 333;
 
 socketListener.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
   socket.on('logon', (data) => {
-    console.log(data.name);
-    allUsers.names.push(data.name);
+    console.log(`User Logged On: ${socket.id}`);
+    const timeStamp = getCurrentTime();
 
-    socket.broadcast.emit('user_connected', allUsers);
-  });
+    //add new user to user list
+    connectedUsers.set(socket.id,data.name);
+    socket.join(defaultRoom);
+
+    //send new updated user list to front end
+    socketListener.to(defaultRoom).emit('user_connected', Array.from(connectedUsers.values()).sort());
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, user_name: 'SERVER', message: `User ${data.name} has joined the chat`});
+
+  })
+
+  socket.on('outbound_message', (message) =>{
+    console.log(`Message Sent By: ${socket.id}`);
+
+    //get the current users name
+    const currentUserName = connectedUsers.get(socket.id);
+    const timeStamp = getCurrentTime();
+
+    //send message to all sockets {time, name, message}
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, user_name: currentUserName, message: `(${timeStamp}) | ${currentUserName}: ${message}`});
+  })
 
   socket.on('disconnect', ()=>{
     console.log(`User Disconnected: ${socket.id}`);
-    allUsers.names = allUsers.names.filter(name =>{
-        //todo remove user from array when disconnected
-    })
+
+    const timeStamp = getCurrentTime();
+    
+    //get the users name
+    const userName = connectedUsers.get(socket.id);
+
+    //remove user from user list
+    connectedUsers.delete(socket.id);
+
+    //send new updated user list to front end
+    //send chat message notifying user left chat
+    socketListener.to(defaultRoom).emit('user_disconnected', Array.from(connectedUsers.values()).sort());
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, user_name: 'SERVER', message: `User ${userName} has left the chat`});
+
+    
   })
 });
 
 server.listen(4000, () => {
   console.log("Server has been started");
 });
+
+const getCurrentTime = ()=>{
+  const dateNow = new Date().toLocaleString();
+
+  return dateNow;
+}
