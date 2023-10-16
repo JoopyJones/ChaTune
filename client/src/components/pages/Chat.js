@@ -61,7 +61,7 @@ export default function Chat({socket}){
             </div>
             <div className="chat-messages">
                 {inBoundMessages.map((ibMsg) =>{
-                        return <pre key={`${ibMsg.timeStamp}|${ibMsg.user_name}`}>{ibMsg.message}</pre>
+                        return <pre key={`${ibMsg.timeStamp}|${ibMsg.userName}`}>{ibMsg.message}</pre>
                     })}
             </div>
         </div>
