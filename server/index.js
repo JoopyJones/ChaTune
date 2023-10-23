@@ -39,10 +39,11 @@ socketListener.on("connection", (socket) => {
 
     const validNameArray = buildValidNameArray();
 
+    //send the new user their valid user name
+    socket.emit('valid_user_name',  {timeStamp, validName});
     //send new updated user list to front end
     socketListener.to(defaultRoom).emit('user_connected',  validNameArray);
-    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName: 'SERVER', message: `User ${validName} has joined the chat`});
-
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName: 'SERVER', message: `${validName} has joined the chat`});
 
   })
 
@@ -55,14 +56,14 @@ socketListener.on("connection", (socket) => {
     const timeStamp = getDateTimeStamp();
 
     //send message to all sockets {time, name, message}
-    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName, message: `(${timeStamp}) | ${userName}: ${message}`});
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName, message});
   })
 
   socket.on('disconnect', ()=>{
     console.log(`User Disconnected: ${socket.id}`);
     
     //get the users name
-    const userName = connectedUsers.get(socket.id).validName;
+    const userName = connectedUsers.get(socket.id)?.validName;
 
     //remove user from user list
     connectedUsers.delete(socket.id);
@@ -74,7 +75,7 @@ socketListener.on("connection", (socket) => {
     //send new updated user list to front end
     //send chat message notifying user left chat
     socketListener.to(defaultRoom).emit('user_disconnected', validNameArray);
-    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName: 'SERVER', message: `User ${userName} has left the chat`});
+    socketListener.to(defaultRoom).emit('inbound_message',  {timeStamp, userName: 'SERVER', message: `${userName} has left the chat`});
 
     
   })
@@ -86,7 +87,7 @@ server.listen(4000, () => {
 
 //helper functions
 const getDateTimeStamp = ()=>{
-  const dateNow = new Date().toLocaleString();
+  const dateNow = new Date().toLocaleTimeString();
 
   return dateNow;
 }

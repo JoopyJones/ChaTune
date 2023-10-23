@@ -8,17 +8,20 @@ export default function Login({socket}){
     //this function will send the users info over to the server and then enter the chat room
     function handleLoginSubmit(e){
         e.preventDefault();
+        if(userName){
 
-        socket.emit('logon', {
-            name: userName
-          });
-        
-        navigate('/chat');
+            socket.emit('logon', {
+                name: userName
+            });
+            
+            navigate('/chat');
+        }
     }
 
     return(
         <div className="login-header">
             <div className="login-box">
+                <h1>Please Login</h1>
                 <form>
                     <input  
                             autoFocus
