@@ -1,30 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-export default function Chat({socket}){
-    const [currentUsers, setCurrentUsers] = useState([]);
+export default function ChatWindow({socket, thisUserName}){
     const [outBoundMessage, setOutBoundMessage] = useState('');
     const [inBoundMessages, setInboundMessages] = useState([]);
+    
+    const chatAnchor = useRef();
+
+    console.log(thisUserName);
 
     //functions to handle events from server
     useEffect(()=>{
-        //user connected, adding name to list
-        socket.on('user_connected', (data)=>{
-            setCurrentUsers(data);
-        })
-
         //chat message received from server
         socket.on('inbound_message', (data)=>{
             setInboundMessages((inBoundMessages)=>{
                 return [...inBoundMessages, data];
             })
         })
-
-        //user disconnected, removing name from list
-        socket.on('user_disconnected', (data)=>{
-            setCurrentUsers(data);
-        })
     }, [socket])
 
+    //this allows us to autoscroll chat to newest message
+    useEffect(()=>{
+        chatAnchor.current?.scrollIntoView();
+    }, [inBoundMessages])
 
     //functions to send events to server
     const sendOutboundMessage = function(event){
@@ -39,16 +36,22 @@ export default function Chat({socket}){
         setOutBoundMessage('');
     }
 
+
     return(
-        <div className="chat-header">
-            <div className="user-list">
-                {currentUsers.map((user) =>{
-                    return <p key={user}>{user}</p>
-                })}
+        <div className="chatWindow-header">
+            <div className="chat-messages">
+                {/* if server message, remove the username and the color span. only user messages get those */}
+                {inBoundMessages.map((ibMsg) =>{
+                        return ibMsg.userName === 'SERVER' ? <pre key={`${ibMsg.timeStamp}|${ibMsg.userName}`}>({ibMsg.timeStamp}) {ibMsg.message}</pre>
+                        :
+                        <pre key={`${ibMsg.timeStamp}|${ibMsg.userName}`}><span className={ibMsg.userName === thisUserName ? "color-current-user" : "color-other-users"}>({ibMsg.timeStamp}) | {ibMsg.userName}: </span>{ibMsg.message}</pre>
+                    })}
+                <div className="chat-anchor" ref={chatAnchor}></div>
             </div>
             <div className="chat-input">
                 <form onSubmit={sendOutboundMessage}>
                     <input
+                            autoFocus
                             minLength="1"
                             onChange={(event) =>{
                                 setOutBoundMessage(event.target.value);
@@ -56,13 +59,7 @@ export default function Chat({socket}){
                             placeholder="Enter Message"
                             value={outBoundMessage}>
                     </input>
-                    <input type="submit" value="Send Message"></input>
                 </form>
-            </div>
-            <div className="chat-messages">
-                {inBoundMessages.map((ibMsg) =>{
-                        return <pre key={`${ibMsg.timeStamp}|${ibMsg.userName}`}>{ibMsg.message}</pre>
-                    })}
             </div>
         </div>
     )

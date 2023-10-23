@@ -1,8 +1,190 @@
-.App {
+:root{
+  --primColor: #6a5acd;
+  --chatBodyColor: #333a41;
+  --chatMessageTextColor: #f3f1f0;
+  --chatMessageDetailColor: #fbe4a9;
+  --chatMyMessageDetailColor: #afd1f9;
+  --userNameBackgroundColor: #333a4188
+}
+
+body{
+  position: static;
+  margin: 0;
+  overflow: hidden;
+}
+
+.login-header{
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--primColor);
+}
+
+.login-box{
+  position: absolute;
+  text-align: center;
+  width: 20%;
+  height: 20%;
+  /* border: 3px solid black; */
+  background-color: var(--userNameBackgroundColor);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.login-box h1{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  width: 100%;
+  color: var(--chatMessageTextColor);
+}
+
+
+.login-box input{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  width: 80%;
+  background-color: var(--chatBodyColor);
+  color: var(--chatMessageTextColor);
+}
+
+.login-box button{
+  display: block;
+  margin: auto;
+  height: 20%;
+  width: 80%;
+  background-color: var(--chatBodyColor);
+  color: var(--chatMessageTextColor);
+}
+
+.main-page-header{
+  background-color: var(--primColor);
+  width: 100%;
+  height: 100%;
+}
+
+/* soundcloud section */
+
+section#soundcloud-section{
+  height: 65vh;
+  border: 2px solid black;
+}
+
+.soundcloud-section-header{
+  width: 100%;
+  height: 100%;
+  font-size: large;
   text-align: center;
 }
 
-.chat-header .chat-messages pre{
+.soundcloud-section-header p{
+  font-size: large;
+
+}
+
+/* chat section */
+section#chat-section{
+  position: relative;
+  height: 35vh;
+  /* border: 2px solid orange; */
+}
+
+.chatWindow-header .chat-messages pre{
   text-align: left;
-  margin: auto;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  color: var(--chatMessageTextColor);
+  white-space: initial;
+}
+
+.color-other-users{
+  color: var(--chatMessageDetailColor);
+}
+
+.color-current-user{
+  color: var(--chatMyMessageDetailColor);
+}
+
+.userlist-header .color-current-user{
+  background-color: var(--userNameBackgroundColor);
+}
+
+.chat-section-header{
+  margin: 0;
+}
+
+.chat-section-header .userlist-header{
+  position: absolute;
+  display: inline;
+  width: 20%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  /* border: 2px solid greenyellow; */
+  overflow-y: scroll;
+  text-align: center;
+}
+
+.chat-section-header .userlist-header .user-name{
+  margin: 0;
+}
+
+.chat-section-header .chatWindow-header{
+  position: absolute;
+  display: inline;
+  width: 80%;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  /* border: 2px solid purple; */
+}
+
+.chat-section-header .chatWindow-header .chat-messages{
+  position: absolute;
+  /* border: 2px solid black; */
+  width: 100%;
+  height: 90%;
+  top: 0;
+  right: 0;
+  left: 0;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  text-align: left;
+  background-color: var(--chatBodyColor);
+}
+
+.chat-section-header .chatWindow-header .chat-input{
+  position: absolute;
+  /* border: 2px solid white; */
+  width: 100%;
+  height: 10%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+
+.chat-section-header .chatWindow-header  input{
+  width: 100%;
+  height: 100%;
+  color: var(--chatMessageTextColor);
+  background-color: var(--chatBodyColor);
+  outline: none;
+  overflow-x: hidden;
+}
+
+.chat-section-header .chatWindow-header  form{
+  width: 100%;
+  height: 100%;
+  color: var(--chatMessageTextColor);
+  background-color: var(--chatBodyColor);
+  outline: none;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
